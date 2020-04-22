@@ -1,0 +1,211 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:product.attribute,display_name:"
+msgid "Display Name"
+msgstr "Nom per mostrar"
+
+msgctxt "field:product.attribute,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:product.attribute,selection:"
+msgid "Selection"
+msgstr "Selecció"
+
+msgctxt "field:product.attribute,sets:"
+msgid "Sets"
+msgstr "Grups d'atributs"
+
+msgctxt "field:product.attribute,type_:"
+msgid "Type"
+msgstr "Tipus"
+
+msgctxt "field:product.attribute-product.attribute-set,attribute:"
+msgid "Attribute"
+msgstr "Atribut"
+
+msgctxt "field:product.attribute-product.attribute-set,attribute_set:"
+msgid "Set"
+msgstr "Grup d'atributs"
+
+msgctxt "field:product.attribute.selection_option,attribute:"
+msgid "Attribute"
+msgstr "Atribut"
+
+msgctxt "field:product.attribute.selection_option,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:product.attribute.set,attributes:"
+msgid "Attributes"
+msgstr "Atributs"
+
+msgctxt "field:product.attribute.set,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:product.product.attribute,attribute:"
+msgid "Attribute"
+msgstr "Atribut"
+
+msgctxt "field:product.product.attribute,attribute_set:"
+msgid "Attribute Set"
+msgstr "Grup d'atributs"
+
+msgctxt "field:product.product.attribute,attribute_type:"
+msgid "Attribute Type"
+msgstr "Tipus d'atribut"
+
+msgctxt "field:product.product.attribute,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:product.product.attribute,value:"
+msgid "Attribute Value"
+msgstr "Valor de l'atribut"
+
+msgctxt "field:product.product.attribute,value_boolean:"
+msgid "Value Boolean"
+msgstr "Valor booleà"
+
+msgctxt "field:product.product.attribute,value_char:"
+msgid "Value Char"
+msgstr "Valor text"
+
+msgctxt "field:product.product.attribute,value_date:"
+msgid "Value Date"
+msgstr "Valor data"
+
+msgctxt "field:product.product.attribute,value_datetime:"
+msgid "Value Datetime"
+msgstr "Valor data i hora"
+
+msgctxt "field:product.product.attribute,value_float:"
+msgid "Value Float"
+msgstr "Valor numèric coma flotant"
+
+msgctxt "field:product.product.attribute,value_integer:"
+msgid "Value Integer"
+msgstr "Valor enter"
+
+msgctxt "field:product.product.attribute,value_numeric:"
+msgid "Value Numeric"
+msgstr "Valor numèric"
+
+msgctxt "field:product.product.attribute,value_selection:"
+msgid "Value Selection"
+msgstr "Valor selecció"
+
+msgctxt "field:product.template,attribute_set:"
+msgid "Set"
+msgstr "Grup d'atributs"
+
+msgctxt "field:product.template,attributes:"
+msgid "Attributes"
+msgstr "Atributs"
+
+msgctxt "model:ir.action,name:act_attribute_form"
+msgid "Attributes"
+msgstr "Atributs"
+
+msgctxt "model:ir.action,name:act_attribute_set_form"
+msgid "Attribute Sets"
+msgstr "Grups d'atributs"
+
+msgctxt "model:ir.ui.menu,name:menu_attribute"
+msgid "Attributes"
+msgstr "Atributs"
+
+msgctxt "model:ir.ui.menu,name:menu_attribute_set"
+msgid "Attribute Sets"
+msgstr "Grups d'atributs"
+
+msgctxt "model:product.attribute,name:"
+msgid "Product Attribute"
+msgstr "Atribut de producte"
+
+msgctxt "model:product.attribute-product.attribute-set,name:"
+msgid "Product Attribute - Set"
+msgstr "Atribut de producte - Grup d'atributs"
+
+msgctxt "model:product.attribute.selection_option,name:"
+msgid "Attribute Selection Option"
+msgstr " Opció de selecció d'atributs"
+
+msgctxt "model:product.attribute.set,name:"
+msgid "Product Attribute Set"
+msgstr "Grup d'atributs de producte"
+
+msgctxt "model:product.product.attribute,name:"
+msgid "Product's Product Attribute"
+msgstr " Atribut de producte del producte"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Boolean"
+msgstr "Booleà"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Char"
+msgstr "Text"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "DateTime"
+msgstr "Data i hora"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Float"
+msgstr "Numèric coma flotant"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Integer"
+msgstr "Enter"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Numeric"
+msgstr "Numèric"
+
+msgctxt "selection:product.attribute,type_:"
+msgid "Selection"
+msgstr "Selecció"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Boolean"
+msgstr "Booleà"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Char"
+msgstr "Text"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "DateTime"
+msgstr "Data i hora"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Float"
+msgstr "Numèric coma flotant"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Integer"
+msgstr "Enter"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Numeric"
+msgstr "Numèric"
+
+msgctxt "selection:product.product.attribute,attribute_type:"
+msgid "Selection"
+msgstr "Selecció"
+
+msgctxt "view:product.template:"
+msgid "Attributes"
+msgstr "Atributs"
