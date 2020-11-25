@@ -217,7 +217,8 @@ class ProductProductAttribute(ModelSQL, ModelView):
         else:
             return getattr(self, 'value_' + self.attribute_type)
 
-    @fields.depends('template', '_parent_template.id')
+    @fields.depends('template', '_parent_template.id',
+        '_parent_template.attribute_set')
     def on_change_with_attribute_set(self, name=None):
         """
         Returns attribute set for corresponding product's template
