@@ -6,4 +6,11 @@ this repository contains the full copyright notices and license terms. -->
     <field name="name"/>
     <newline/>
     <field name="attributes" colspan="4"/>
+    <newline/>
+
+        <label name="use_templates"/>
+        <field name="use_templates"/>
+        <label name="jinja_templates"/>
+        <field name="jinja_templates" colspan="3"/>
+
 </form>

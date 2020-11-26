@@ -109,5 +109,24 @@
             <field name="type">form</field>
             <field name="name">product_attribute_form</field>
         </record>
+
+        <record model="ir.ui.view" id="product_attribute_field_template_view_list">
+            <field name="model">product.attribute.field_template</field>
+            <field name="type">tree</field>
+            <field name="name">product_attribute_field_template_tree</field>
+        </record>
+        <record model="ir.ui.view" id="product_attribute_field_template_view_form">
+            <field name="model">product.attribute.field_template</field>
+            <field name="type">form</field>
+            <field name="name">product_attribute_field_template_form</field>
+        </record>
+
+        <record model="ir.model.button" id="attributes_update_button">
+            <field name="name">update_attributes_values</field>
+            <field name="string">Update Attributes Fields</field>
+            <field name="model" search="[('model', '=', 'product.template')]"/>
+        </record>
+
+
     </data>
 </tryton>
