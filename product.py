@@ -5,13 +5,20 @@ from datetime import time
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import And,Eval,Not
 from trytond.transaction import Transaction
+
+try:
+    from jinja2 import Template as Jinja2Template
+    jinja2_loaded = True
+except ImportError:
+    jinja2_loaded = False
+
 
 __all__ = [
     'ProductAttributeSet', 'ProductAttributeSelectionOption',
     'ProductAttribute', 'ProductAttributeAttributeSet',
-    'Template', 'ProductProductAttribute']
+    'Template', 'ProductProductAttribute', 'AttributeSetFieldTemplate']
 
 ATTRIBUTE_TYPES = [
     ('boolean', 'Boolean'),
@@ -34,6 +41,52 @@ class ProductAttributeSet(ModelSQL, ModelView):
         'product.attribute-product.attribute-set',
         'attribute_set', 'attribute', 'Attributes'
     )
+    use_templates = fields.Boolean('Use Templates')
+    jinja_templates = fields.One2Many('product.attribute.field_template',
+        'attribute_set', 'Templates',
+        states={
+            'invisible': Not(Eval('use_templates'))
+        }, depends=['use_templates'])
+
+    @staticmethod
+    def default_use_templates():
+        return False
+
+    @staticmethod
+    def template_context(record):
+        User = Pool().get('res.user')
+        user = None
+        if Transaction().user:
+            user = User(Transaction().user)
+        return {
+            'record': record,
+            'user': user,
+            }
+
+    def render_expression(self, expression, attributes):
+        record = dict((x.attribute.name, x.value) for x in attributes)
+        template = Jinja2Template(expression)
+        return template.render(record)
+
+    def render_expression_record(self, expression, record):
+        template = Jinja2Template(expression)
+        return template.render(record)
+
+
+
+class AttributeSetFieldTemplate(ModelSQL, ModelView):
+    "Product Attribute field Templates"
+    __name__ = 'product.attribute.field_template'
+
+    field_ = fields.Selection('get_field_selection', 'Field')
+    jinja_template = fields.Text('jinja_template')
+    attribute_set = fields.Many2One('product.attribute.set', 'Attribute Set')
+    @staticmethod
+    def get_field_selection():
+        return [
+            ('product,code', 'Code'),
+            ('template,name',  'Name')
+        ]
 
 
 class ProductAttributeSelectionOption(ModelSQL, ModelView):
@@ -106,6 +159,43 @@ class Template(metaclass=PoolMeta):
          states={
             'readonly': (~Eval('attribute_set')),
         }, depends=['attribute_set'])
+
+    use_templates = fields.Function(fields.Boolean('Use Templates'),
+        'get_use_templates')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._buttons.update({
+            'update_attributes_values': {
+                'invisible': ~Eval('use_templates'),
+                'depends': ['attribute_set', 'use_templates']
+        }})
+
+    def get_use_templates(self, name):
+        if self.attribute_set and self.attribute_set.use_templates:
+            return True
+        return False
+
+    @classmethod
+    @ModelView.button
+    def update_attributes_values(cls, templates):
+        for template in templates:
+            if (not template.attribute_set and
+                    not template.attribute_set.use_templates):
+                continue
+            product, = template.products
+            for field in template.attribute_set.jinja_templates:
+                obj_name, name = field.field_.split(',')
+                obj = template
+                if obj_name != 'template':
+                    obj = product
+
+                jinja_template = field.jinja_template
+                value = template.attribute_set.render_expression(
+                    jinja_template, template.attributes)
+                setattr(obj, name, value)
+                obj.save()
 
 
 class ProductProductAttribute(ModelSQL, ModelView):

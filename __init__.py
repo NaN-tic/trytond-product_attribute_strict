@@ -8,10 +8,11 @@ module = 'product_attribute_strict'
 def register():
     Pool.register(
         product.ProductAttributeSet,
+        product.AttributeSetFieldTemplate,
         product.ProductAttribute,
         product.ProductAttributeSelectionOption,
         product.ProductAttributeAttributeSet,
-        product.Template,
         product.ProductProductAttribute,
+        product.Template,
         module=module, type_='model'
     )

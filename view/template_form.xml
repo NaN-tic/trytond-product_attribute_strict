@@ -6,6 +6,7 @@ this repository contains the full copyright notices and license terms. -->
         <page id="attributes" string="Attributes">
           <label name="attribute_set"/>
           <field name="attribute_set"/>
+          <button name="update_attributes_values"/>
           <newline/>
           <field name="attributes" colspan="6"/>
         </page>

@@ -30,6 +30,18 @@ msgctxt "field:product.attribute-product.attribute-set,attribute_set:"
 msgid "Set"
 msgstr "Grupo de atributos"
 
+msgctxt "field:product.attribute.field_template,attribute_set:"
+msgid "Attribute Set"
+msgstr "Grupo de atributos"
+
+msgctxt "field:product.attribute.field_template,field_:"
+msgid "Field"
+msgstr "Campo"
+
+msgctxt "field:product.attribute.field_template,jinja_template:"
+msgid "jinja_template"
+msgstr "Plantilla"
+
 msgctxt "field:product.attribute.selection_option,attribute:"
 msgid "Attribute"
 msgstr "Atributo"
@@ -42,9 +54,17 @@ msgctxt "field:product.attribute.set,attributes:"
 msgid "Attributes"
 msgstr "Atributos"
 
+msgctxt "field:product.attribute.set,jinja_templates:"
+msgid "Templates"
+msgstr "Plantillas"
+
 msgctxt "field:product.attribute.set,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:product.attribute.set,use_templates:"
+msgid "Use Templates"
+msgstr "Usar plantillas"
 
 msgctxt "field:product.product.attribute,attribute:"
 msgid "Attribute"
@@ -106,6 +126,10 @@ msgctxt "field:product.template,attributes:"
 msgid "Attributes"
 msgstr "Atributos"
 
+msgctxt "field:product.template,use_templates:"
+msgid "Use Templates"
+msgstr "Usar plantillas"
+
 msgctxt "model:ir.action,name:act_attribute_form"
 msgid "Attributes"
 msgstr "Atributos"
@@ -113,6 +137,10 @@ msgstr "Atributos"
 msgctxt "model:ir.action,name:act_attribute_set_form"
 msgid "Attribute Sets"
 msgstr "Grupos de atributos"
+
+msgctxt "model:ir.model.button,string:attributes_update_button"
+msgid "Update Attributes Fields"
+msgstr "Actualizar campos desde plantillas"
 
 msgctxt "model:ir.ui.menu,name:menu_attribute"
 msgid "Attributes"
@@ -129,6 +157,10 @@ msgstr "Atributo de producto"
 msgctxt "model:product.attribute-product.attribute-set,name:"
 msgid "Product Attribute - Set"
 msgstr "Atributo de producto - Grupo de atributos"
+
+msgctxt "model:product.attribute.field_template,name:"
+msgid "Product Attribute field Templates"
+msgstr "Plantilla para attributos"
 
 msgctxt "model:product.attribute.selection_option,name:"
 msgid "Attribute Selection Option"

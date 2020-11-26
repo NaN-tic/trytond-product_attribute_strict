@@ -1,0 +1,6 @@
+<form>
+    <label name="field_"/>
+    <field name="field_"/>
+    <label name="jinja_template"/>
+    <field name="jinja_template" colspan="3"/>
+</form>
