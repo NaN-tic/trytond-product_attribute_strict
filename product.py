@@ -4,7 +4,7 @@ from datetime import datetime
 from datetime import time
 
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.pool import PoolMeta
+from trytond.pool import PoolMeta, Pool
 from trytond.pyson import And,Eval,Not
 from trytond.transaction import Transaction
 
@@ -177,25 +177,37 @@ class Template(metaclass=PoolMeta):
             return True
         return False
 
+    def _update_attributes_values(self):
+        if (not self.attribute_set and
+                not self.attribute_set.use_templates):
+            return
+
+        products_to_save = []
+        for product in self.products:
+            for field in self.attribute_set.jinja_templates:
+                obj_name, name = field.field_.split(',')
+                obj = self
+                if obj_name == 'product' and product:
+                    obj = product
+                    products_to_save.append(product)
+
+                jinja_template = field.jinja_template
+                value = self.attribute_set.render_expression(
+                    jinja_template, self.attributes)
+                setattr(obj, name, value)
+
+        return products_to_save
+
     @classmethod
     @ModelView.button
     def update_attributes_values(cls, templates):
+        Product = Pool().get('product.product')
+        product_to_save = []
         for template in templates:
-            if (not template.attribute_set and
-                    not template.attribute_set.use_templates):
-                continue
-            product, = template.products
-            for field in template.attribute_set.jinja_templates:
-                obj_name, name = field.field_.split(',')
-                obj = template
-                if obj_name != 'template':
-                    obj = product
+            product_to_save += template._update_attributes_values()
 
-                jinja_template = field.jinja_template
-                value = template.attribute_set.render_expression(
-                    jinja_template, template.attributes)
-                setattr(obj, name, value)
-                obj.save()
+        cls.save(templates)
+        Product.save(product_to_save)
 
 
 class ProductProductAttribute(ModelSQL, ModelView):
