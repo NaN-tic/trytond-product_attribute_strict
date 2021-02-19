@@ -1,11 +1,11 @@
-#The COPYRIGHT file at the top level of this repository contains the full
-#copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains the full
+# copyright notices and license terms.
 from datetime import datetime
 from datetime import time
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import And,Eval,Not
+from trytond.pyson import Eval, If, Bool, Not
 from trytond.transaction import Transaction
 
 try:
@@ -73,7 +73,6 @@ class ProductAttributeSet(ModelSQL, ModelView):
         return template.render(record)
 
 
-
 class AttributeSetFieldTemplate(ModelSQL, ModelView):
     "Product Attribute field Templates"
     __name__ = 'product.attribute.field_template'
@@ -81,11 +80,12 @@ class AttributeSetFieldTemplate(ModelSQL, ModelView):
     field_ = fields.Selection('get_field_selection', 'Field')
     jinja_template = fields.Text('jinja_template')
     attribute_set = fields.Many2One('product.attribute.set', 'Attribute Set')
+
     @staticmethod
     def get_field_selection():
         return [
             ('product,code', 'Code'),
-            ('template,name',  'Name')
+            ('template,name', 'Name')
         ]
 
 
@@ -143,7 +143,6 @@ class ProductAttributeAttributeSet(ModelSQL):
         ondelete='CASCADE', select=True, required=True
     )
 
-
 class Template(metaclass=PoolMeta):
     __name__ = 'product.template'
 
@@ -156,7 +155,7 @@ class Template(metaclass=PoolMeta):
             ('attribute_set', '=',
                 Eval('attribute_set')),
             ],
-         states={
+        states={
             'readonly': (~Eval('attribute_set')),
         }, depends=['attribute_set'])
 
@@ -165,12 +164,11 @@ class Template(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super().__setup__()
+        super(Template, cls).__setup__()
         cls._buttons.update({
             'update_attributes_values': {
                 'invisible': ~Eval('use_templates'),
-                'depends': ['attribute_set', 'use_templates']
-        }})
+                'depends': ['attribute_set', 'use_templates']}})
 
     def get_use_templates(self, name):
         if self.attribute_set and self.attribute_set.use_templates:
@@ -209,14 +207,68 @@ class Template(metaclass=PoolMeta):
         cls.save(templates)
         Product.save(product_to_save)
 
+    def product_attribute_used(self):
+        # Skip rules to test pattern on all records
+        with Transaction().set_user(0):
+            template = self.__class__(self)
+        for attribute in template.attributes:
+            yield attribute
+
+
+class Product(metaclass=PoolMeta):
+    __name__ = 'product.product'
+
+    attributes = fields.One2Many(
+        "product.product.attribute", "product", "Attributes",
+        domain=[
+            ('attribute_set', '=',
+                Eval('attribute_set')),
+            ],
+        states={
+            'readonly': (~Eval('attribute_set')),
+        }, depends=['attribute_set'])
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._buttons.update({
+            'update_attributes_values': {
+                'invisible': ~Eval('use_templates'),
+                'depends': ['attribute_set', 'use_templates']}})
+
+    def update_attributes_values(self):
+        return self.template.update_attributes_values()
+
+    def product_attribute_used(self):
+        # Skip rules to test pattern on all records
+        with Transaction().set_user(0):
+            product = self.__class__(self)
+        for attributes in product.attributes:
+            yield attributes
+        yield from self.template.product_attribute_used()
+
 
 class ProductProductAttribute(ModelSQL, ModelView):
     "Product's Product Attribute"
     __name__ = 'product.product.attribute'
 
     template = fields.Many2One(
-        "product.template", "Template", select=True, required=True
-    )
+        "product.template", "Template", required=True, select=True,
+        ondelete='CASCADE',
+        domain=[
+            If(Bool(Eval('product')),
+                ('products', '=', Eval('product')),
+                ()),
+            ],
+        depends=['product'])
+    product = fields.Many2One(
+        "product.product", "Variant", select=True, required=True,
+        domain=[
+            If(Bool(Eval('template')),
+                ('template', '=', Eval('template')),
+                ()),
+            ],
+        depends=['template'])
 
     attribute = fields.Many2One(
         "product.attribute", "Attribute", required=True, select=True,

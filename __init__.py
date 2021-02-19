@@ -14,5 +14,6 @@ def register():
         product.ProductAttributeAttributeSet,
         product.ProductProductAttribute,
         product.Template,
+        product.Product,
         module=module, type_='model'
     )

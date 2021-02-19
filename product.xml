@@ -99,6 +99,12 @@
             <field name="name">template_form</field>
         </record>
 
+        <record model="ir.ui.view" id="product_view_form">
+            <field name="model">product.product</field>
+            <field name="inherit" ref="product.product_view_form"/>
+            <field name="name">product_form</field>
+        </record>
+
         <record model="ir.ui.view" id="product_attribute_view_list">
             <field name="model">product.product.attribute</field>
             <field name="type">tree</field>
@@ -126,7 +132,22 @@
             <field name="string">Update Attributes Fields</field>
             <field name="model" search="[('model', '=', 'product.template')]"/>
         </record>
+        <record model="ir.model.button-res.group"
+            id="access_attribute_admin_button_group">
+            <field name="button" ref="attributes_update_button"/>
+            <field name="group" ref="access_attribute_admin"/>
+        </record>
 
+        <record model="ir.model.button" id="attributes_product_update_button">
+            <field name="name">update_attributes_values</field>
+            <field name="string">Update Attributes Fields</field>
+            <field name="model" search="[('model', '=', 'product.product')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="access_attribute_product_admin_button_group">
+            <field name="button" ref="attributes_product_update_button"/>
+            <field name="group" ref="access_attribute_admin"/>
+        </record>
 
     </data>
 </tryton>
