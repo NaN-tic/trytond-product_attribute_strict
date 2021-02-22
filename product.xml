@@ -135,7 +135,7 @@
         <record model="ir.model.button-res.group"
             id="access_attribute_admin_button_group">
             <field name="button" ref="attributes_update_button"/>
-            <field name="group" ref="access_attribute_admin"/>
+            <field name="group" ref="product.group_product_admin"/>
         </record>
 
         <record model="ir.model.button" id="attributes_product_update_button">
@@ -146,7 +146,7 @@
         <record model="ir.model.button-res.group"
             id="access_attribute_product_admin_button_group">
             <field name="button" ref="attributes_product_update_button"/>
-            <field name="group" ref="access_attribute_admin"/>
+            <field name="group" ref="product.group_product_admin"/>
         </record>
 
     </data>
