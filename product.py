@@ -222,11 +222,14 @@ class Product(metaclass=PoolMeta):
         "product.product.attribute", "product", "Attributes",
         domain=[
             ('attribute_set', '=',
-                Eval('attribute_set')),
+                Eval('product_attribute_set')),
             ],
         states={
-            'readonly': (~Eval('attribute_set')),
-        }, depends=['attribute_set'])
+            'readonly': (~Eval('product_attribute_set')),
+        }, depends=['product_attribute_set'])
+
+    product_attribute_set = fields.Function(fields.Many2One(
+        'product.attribute.set', 'Attribute Set'), 'get_product_attribute_set')
 
     @classmethod
     def __setup__(cls):
@@ -235,6 +238,9 @@ class Product(metaclass=PoolMeta):
             'update_attributes_values': {
                 'invisible': ~Eval('use_templates'),
                 'depends': ['attribute_set', 'use_templates']}})
+
+    def get_product_attribute_set(self, name=None):
+        return self.template.attribute_set and self.template.attribute_set.id
 
     def update_attributes_values(self):
         return self.template.update_attributes_values()
@@ -262,7 +268,7 @@ class ProductProductAttribute(ModelSQL, ModelView):
             ],
         depends=['product'])
     product = fields.Many2One(
-        "product.product", "Variant", select=True, required=True,
+        "product.product", "Variant", select=True,
         domain=[
             If(Bool(Eval('template')),
                 ('template', '=', Eval('template')),
@@ -345,6 +351,12 @@ class ProductProductAttribute(ModelSQL, ModelView):
         }, depends=['attribute_type']
     )
 
+    @fields.depends('product', '_parent_product.template', 'attribute_set')
+    def on_change_product(self):
+        if self.product:
+            self.template = self.product.template
+            self.attribute_set = self.template.attribute_set
+
     @fields.depends('attribute')
     def on_change_attribute(self):
         self.attribute_type = self.get_attribute_type()
@@ -379,6 +391,7 @@ class ProductProductAttribute(ModelSQL, ModelView):
         """
         if self.template and self.template.attribute_set:
             return self.template.attribute_set.id
+
 
     @classmethod
     def search_attribute_set(cls, name, clause):

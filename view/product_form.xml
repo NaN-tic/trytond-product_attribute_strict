@@ -4,8 +4,8 @@ this repository contains the full copyright notices and license terms. -->
 <data>
     <xpath expr="/form/notebook" position="inside">
         <page id="attributes" string="Attributes">
-          <label name="attribute_set"/>
-          <field name="attribute_set"/>
+          <label name="product_attribute_set"/>
+          <field name="product_attribute_set"/>
           <newline/>
           <field name="attributes" colspan="6"/>
         </page>
