@@ -17,8 +17,8 @@ except ImportError:
 
 __all__ = [
     'ProductAttributeSet', 'ProductAttributeSelectionOption',
-    'ProductAttribute', 'ProductAttributeAttributeSet',
-    'Template', 'ProductProductAttribute', 'AttributeSetFieldTemplate']
+    'ProductAttribute', 'ProductAttributeAttributeSet', 'Template', 'Product',
+    'ProductProductAttribute', 'AttributeSetFieldTemplate']
 
 ATTRIBUTE_TYPES = [
     ('boolean', 'Boolean'),
@@ -208,6 +208,10 @@ class Template(metaclass=PoolMeta):
 
         cls.save(templates)
         Product.save(product_to_save)
+
+
+class Product(metaclass=PoolMeta):
+    __name__ = 'product.product'
 
 
 class ProductProductAttribute(ModelSQL, ModelView):
