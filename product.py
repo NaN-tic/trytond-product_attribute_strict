@@ -254,10 +254,6 @@ class Product(metaclass=PoolMeta):
         yield from self.template.product_attribute_used()
 
 
-class Product(metaclass=PoolMeta):
-    __name__ = 'product.product'
-
-
 class ProductProductAttribute(ModelSQL, ModelView):
     "Product's Product Attribute"
     __name__ = 'product.product.attribute'
