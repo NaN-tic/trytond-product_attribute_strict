@@ -99,12 +99,6 @@
             <field name="name">template_form</field>
         </record>
 
-        <record model="ir.ui.view" id="product_view_form">
-            <field name="model">product.product</field>
-            <field name="inherit" ref="product.product_view_form"/>
-            <field name="name">product_form</field>
-        </record>
-
         <record model="ir.ui.view" id="product_attribute_view_list">
             <field name="model">product.product.attribute</field>
             <field name="type">tree</field>
