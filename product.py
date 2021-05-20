@@ -207,6 +207,7 @@ class Template(metaclass=PoolMeta):
         cls.save(templates)
         Product.save(product_to_save)
 
+    @property
     def product_attribute_used(self):
         # Skip rules to test pattern on all records
         with Transaction().set_user(0):
@@ -245,6 +246,7 @@ class Product(metaclass=PoolMeta):
     def update_attributes_values(self):
         return self.template.update_attributes_values()
 
+    @property
     def product_attribute_used(self):
         # Skip rules to test pattern on all records
         with Transaction().set_user(0):
