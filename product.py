@@ -215,6 +215,30 @@ class Template(metaclass=PoolMeta):
         for attribute in template.attributes:
             yield attribute
 
+    @classmethod
+    def copy(cls, templates, default=None):
+        pool = Pool()
+        ProductAttribute = pool.get('product.product.attribute')
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+
+        copy_attributes = 'attributes' not in default
+        default.setdefault('attributes', None)
+        new_templates = super().copy(templates, default)
+        if copy_attributes:
+            old2new = {}
+            to_copy = []
+            for template, new_template in zip(templates, new_templates):
+                to_copy.extend(
+                    ps for ps in template.attributes if not ps.product)
+                old2new[template.id] = new_template.id
+            if to_copy:
+                ProductAttribute.copy(to_copy, {
+                        'template': lambda d: old2new[d['template']],
+                        })
+        return new_templates
 
 class Product(metaclass=PoolMeta):
     __name__ = 'product.product'
@@ -254,6 +278,35 @@ class Product(metaclass=PoolMeta):
         for attributes in product.attributes:
             yield attributes
         yield from self.template.product_attribute_used()
+
+    @classmethod
+    def copy(cls, products, default=None):
+        pool = Pool()
+        ProductAttribute = pool.get('product.product.attribute')
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+
+        copy_attributes = 'attributes' not in default
+        if 'template' in default:
+            default.setdefault('attributes', None)
+        new_products = super().copy(products, default)
+        if 'template' in default and copy_attributes:
+            template2new = {}
+            product2new = {}
+            to_copy = []
+            for product, new_product in zip(products, new_products):
+                if product.attributes:
+                    to_copy.extend(product.attributes)
+                    template2new[product.template.id] = new_product.template.id
+                    product2new[product.id] = new_product.id
+            if to_copy:
+                ProductAttribute.copy(to_copy, {
+                        'product': lambda d: product2new[d['product']],
+                        'template': lambda d: template2new[d['template']],
+                        })
+        return new_products
 
 
 class ProductProductAttribute(ModelSQL, ModelView):
