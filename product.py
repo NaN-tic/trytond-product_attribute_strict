@@ -36,7 +36,7 @@ class ProductAttributeSet(ModelSQL, ModelView):
     "Product Attribute Set"
     __name__ = 'product.attribute.set'
 
-    name = fields.Char('Name', required=True, select=True, translate=True)
+    name = fields.Char('Name', required=True, translate=True)
     attributes = fields.Many2Many(
         'product.attribute-product.attribute-set',
         'attribute_set', 'attribute', 'Attributes'
@@ -94,7 +94,7 @@ class ProductAttributeSelectionOption(ModelSQL, ModelView):
 
     __name__ = 'product.attribute.selection_option'
 
-    name = fields.Char("Name", required=True, select=True, translate=True)
+    name = fields.Char("Name", required=True, translate=True)
     attribute = fields.Many2One(
         "product.attribute", "Attribute", required=True, ondelete='CASCADE'
     )
@@ -109,10 +109,10 @@ class ProductAttribute(ModelSQL, ModelView):
         'attribute', 'attribute_set', 'Sets'
     )
 
-    name = fields.Char('Name', required=True, select=True, translate=True)
+    name = fields.Char('Name', required=True, translate=True)
     display_name = fields.Char('Display Name', translate=True)
     type_ = fields.Selection(
-        ATTRIBUTE_TYPES, 'Type', required=True, select=True
+        ATTRIBUTE_TYPES, 'Type', required=True
     )
 
     selection = fields.One2Many(
@@ -136,11 +136,11 @@ class ProductAttributeAttributeSet(ModelSQL):
 
     attribute = fields.Many2One(
         'product.attribute', 'Attribute',
-        ondelete='CASCADE', select=True, required=True
+        ondelete='CASCADE', required=True
     )
     attribute_set = fields.Many2One(
         'product.attribute.set', 'Set',
-        ondelete='CASCADE', select=True, required=True
+        ondelete='CASCADE', required=True
     )
 
 class Template(metaclass=PoolMeta):
@@ -314,7 +314,7 @@ class ProductProductAttribute(ModelSQL, ModelView):
     __name__ = 'product.product.attribute'
 
     template = fields.Many2One(
-        "product.template", "Template", required=True, select=True,
+        "product.template", "Template", required=True,
         ondelete='CASCADE',
         domain=[
             If(Bool(Eval('product')),
@@ -323,7 +323,7 @@ class ProductProductAttribute(ModelSQL, ModelView):
             ],
         depends=['product'])
     product = fields.Many2One(
-        "product.product", "Variant", select=True,
+        "product.product", "Variant",
         domain=[
             If(Bool(Eval('template')),
                 ('template', '=', Eval('template')),
@@ -332,7 +332,7 @@ class ProductProductAttribute(ModelSQL, ModelView):
         depends=['template'])
 
     attribute = fields.Many2One(
-        "product.attribute", "Attribute", required=True, select=True,
+        "product.attribute", "Attribute", required=True,
         domain=[('sets', '=', Eval('attribute_set'))],
         depends=['attribute_set'], ondelete='RESTRICT'
     )
