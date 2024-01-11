@@ -46,7 +46,7 @@ class ProductAttributeSet(ModelSQL, ModelView):
         'attribute_set', 'Templates',
         states={
             'invisible': Not(Eval('use_templates'))
-        }, depends=['use_templates'])
+        })
 
     @staticmethod
     def default_use_templates():
@@ -157,7 +157,7 @@ class Template(metaclass=PoolMeta):
             ],
         states={
             'readonly': (~Eval('attribute_set')),
-        }, depends=['attribute_set'])
+        })
 
     use_templates = fields.Function(fields.Boolean('Use Templates'),
         'get_use_templates')
@@ -251,7 +251,7 @@ class Product(metaclass=PoolMeta):
             ],
         states={
             'readonly': (~Eval('product_attribute_set')),
-        }, depends=['product_attribute_set'])
+        })
 
     product_attribute_set = fields.Function(fields.Many2One(
         'product.attribute.set', 'Attribute Set'), 'get_product_attribute_set')
@@ -356,19 +356,19 @@ class ProductProductAttribute(ModelSQL, ModelView):
         "Value Char", translate=True, states={
             'required': Eval('attribute_type') == 'char',
             'invisible': ~(Eval('attribute_type') == 'char'),
-        }, depends=['attribute_type']
+        }
     )
     value_numeric = fields.Numeric(
         "Value Numeric", states={
             'required': Eval('attribute_type') == 'numeric',
             'invisible': ~(Eval('attribute_type') == 'numeric'),
-        }, depends=['attribute_type']
+        }
     )
     value_float = fields.Float(
         "Value Float", states={
             'required': Eval('attribute_type') == 'float',
             'invisible': ~(Eval('attribute_type') == 'float'),
-        }, depends=['attribute_type']
+        }
     )
 
     value_selection = fields.Many2One(
@@ -377,7 +377,7 @@ class ProductProductAttribute(ModelSQL, ModelView):
         states={
             'required': Eval('attribute_type') == 'selection',
             'invisible': ~(Eval('attribute_type') == 'selection'),
-        }, depends=['attribute', 'attribute_type'],
+        },
         ondelete='RESTRICT'
     )
 
@@ -385,25 +385,25 @@ class ProductProductAttribute(ModelSQL, ModelView):
         "Value Boolean", states={
             'required': Eval('attribute_type') == 'boolean',
             'invisible': ~(Eval('attribute_type') == 'boolean'),
-        }, depends=['attribute_type']
+        }
     )
     value_integer = fields.Integer(
         "Value Integer", states={
             'required': Eval('attribute_type') == 'integer',
             'invisible': ~(Eval('attribute_type') == 'integer'),
-        }, depends=['attribute_type']
+        }
     )
     value_date = fields.Date(
         "Value Date", states={
             'required': Eval('attribute_type') == 'date',
             'invisible': ~(Eval('attribute_type') == 'date'),
-        }, depends=['attribute_type']
+        }
     )
     value_datetime = fields.DateTime(
         "Value Datetime", states={
             'required': Eval('attribute_type') == 'datetime',
             'invisible': ~(Eval('attribute_type') == 'datetime'),
-        }, depends=['attribute_type']
+        }
     )
 
     @fields.depends('product', '_parent_product.template', 'attribute_set')
