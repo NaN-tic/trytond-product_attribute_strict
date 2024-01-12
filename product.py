@@ -320,21 +320,19 @@ class ProductProductAttribute(ModelSQL, ModelView):
             If(Bool(Eval('product')),
                 ('products', '=', Eval('product')),
                 ()),
-            ],
-        depends=['product'])
+            ])
     product = fields.Many2One(
         "product.product", "Variant",
         domain=[
             If(Bool(Eval('template')),
                 ('template', '=', Eval('template')),
                 ()),
-            ],
-        depends=['template'])
+            ])
 
     attribute = fields.Many2One(
         "product.attribute", "Attribute", required=True,
         domain=[('sets', '=', Eval('attribute_set'))],
-        depends=['attribute_set'], ondelete='RESTRICT'
+        ondelete='RESTRICT'
     )
 
     attribute_type = fields.Function(
