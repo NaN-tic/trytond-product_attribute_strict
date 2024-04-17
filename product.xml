@@ -33,14 +33,14 @@
             action="act_attribute_set_form"/>
 
         <record model="ir.model.access" id="access_attribute_set">
-            <field name="model" search="[('model', '=', 'product.attribute.set')]"/>
+            <field name="model">product.attribute.set</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_attribute_set_admin">
-            <field name="model" search="[('model', '=', 'product.attribute.set')]"/>
+            <field name="model">product.attribute.set</field>
             <field name="group" ref="product.group_product_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -78,14 +78,14 @@
             action="act_attribute_form"/>
 
         <record model="ir.model.access" id="access_attribute">
-            <field name="model" search="[('model', '=', 'product.attribute')]"/>
+            <field name="model">product.attribute</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_attribute_admin">
-            <field name="model" search="[('model', '=', 'product.attribute')]"/>
+            <field name="model">product.attribute</field>
             <field name="group" ref="product.group_product_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -124,7 +124,7 @@
         <record model="ir.model.button" id="attributes_update_button">
             <field name="name">update_attributes_values</field>
             <field name="string">Update Attributes Fields</field>
-            <field name="model" search="[('model', '=', 'product.template')]"/>
+            <field name="model">product.template</field>
         </record>
         <record model="ir.model.button-res.group"
             id="access_attribute_admin_button_group">
@@ -135,7 +135,7 @@
         <record model="ir.model.button" id="attributes_product_update_button">
             <field name="name">update_attributes_values</field>
             <field name="string">Update Attributes Fields</field>
-            <field name="model" search="[('model', '=', 'product.product')]"/>
+            <field name="model">product.product</field>
         </record>
         <record model="ir.model.button-res.group"
             id="access_attribute_product_admin_button_group">
