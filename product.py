@@ -434,7 +434,8 @@ class ProductProductAttribute(ModelSQL, ModelView):
             return datetime.combine(self.value_date, time()). \
                 strftime("%Y-%m-%d")
         else:
-            return getattr(self, 'value_' + self.attribute_type)
+            value = getattr(self, 'value_' + self.attribute_type)
+            return '%s' % value if value else ''
 
     @fields.depends('template', '_parent_template.id',
         '_parent_template.attribute_set')
