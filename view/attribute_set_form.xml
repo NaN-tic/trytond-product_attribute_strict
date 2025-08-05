@@ -4,13 +4,12 @@ this repository contains the full copyright notices and license terms. -->
 <form>
     <label name="name"/>
     <field name="name"/>
-    <newline/>
-    <field name="attributes" colspan="4"/>
-    <newline/>
-
+    <group colspan="2" col="-1" id="checkboxes">
+        <label name="fill_on_selection"/>
+        <field name="fill_on_selection"/>
         <label name="use_templates"/>
         <field name="use_templates"/>
-        <label name="jinja_templates"/>
-        <field name="jinja_templates" colspan="3"/>
-
+    </group>
+    <field name="attributes" colspan="4"/>
+    <field name="jinja_templates" colspan="4"/>
 </form>
