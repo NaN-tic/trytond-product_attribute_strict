@@ -109,6 +109,11 @@
             <field name="type">form</field>
             <field name="name">product_attribute_form</field>
         </record>
+        <record model="ir.ui.view" id="product_attribute_view_list_form">
+            <field name="model">product.product.attribute</field>
+            <field name="type">list-form</field>
+            <field name="name">product_attribute_form</field>
+        </record>
 
         <record model="ir.ui.view" id="product_attribute_field_template_view_list">
             <field name="model">product.attribute.field_template</field>
