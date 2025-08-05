@@ -1,8 +1,6 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
-from datetime import datetime
-from datetime import time
-
+import pytz
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, If, Bool, Not
@@ -26,12 +24,29 @@ ATTRIBUTE_TYPES = [
     ('selection', 'Selection'),
 ]
 
+def datetime_to_company_tz(value):
+    pool = Pool()
+    Company = pool.get('company.company')
+    Lang = pool.get('ir.lang')
+
+    company_id = Transaction().context.get('company')
+    if company_id:
+        company = Company(company_id)
+        if company.timezone:
+            timezone = pytz.timezone(company.timezone)
+            value = timezone.localize(value)
+            value = value + value.utcoffset()
+    return Lang.get().strftime(value)
+
 
 class ProductAttributeSet(ModelSQL, ModelView):
     "Product Attribute Set"
     __name__ = 'product.attribute.set'
 
     name = fields.Char('Name', required=True, translate=True)
+    fill_on_selection = fields.Boolean('Fill on Selection',
+        help='If checked, the attributes will be created '
+        'when the set is selected in a product.')
     attributes = fields.Many2Many(
         'product.attribute-product.attribute-set',
         'attribute_set', 'attribute', 'Attributes'
@@ -162,7 +177,35 @@ class Template(metaclass=PoolMeta):
         cls._buttons.update({
             'update_attributes_values': {
                 'invisible': ~Eval('use_templates'),
-                'depends': ['attribute_set', 'use_templates']}})
+                'depends': ['attribute_set', 'use_templates'],
+                }
+            })
+
+    @fields.depends('attribute_set', 'attributes')
+    def on_change_attribute_set(self):
+        pool = Pool()
+        ProductAttribute = pool.get('product.product.attribute')
+
+        if not self.attribute_set or not self.attribute_set.fill_on_selection:
+            return
+        set_attributes = set(self.attribute_set.attributes)
+        product_attributes = set([x.attribute for x in self.attributes])
+
+        missing = set_attributes - product_attributes
+        exceeding = product_attributes - set_attributes
+
+        to_add = []
+        for attribute in self.attributes:
+            if attribute.attribute in exceeding:
+                continue
+            to_add.append(attribute)
+        for attribute in missing:
+            product_attribute = ProductAttribute()
+            product_attribute.attribute = attribute
+            product_attribute.attribute_type = attribute.type_
+            product_attribute.value = product_attribute.on_change_with_value()
+            to_add.append(product_attribute)
+        self.attributes = tuple(to_add)
 
     def get_use_templates(self, name):
         if self.attribute_set and self.attribute_set.use_templates:
@@ -385,28 +428,27 @@ class ProductProductAttribute(ModelSQL, ModelView):
             self.attribute_set = self.template.attribute_set
 
     @fields.depends('attribute')
-    def on_change_attribute(self):
-        self.attribute_type = self.get_attribute_type()
-
-    def get_attribute_type(self, name=None):
-        """
-        Returns type of attribute
-        """
+    def on_change_with_attribute_type(self, name=None):
         if self.attribute:
             return self.attribute.type_
 
-    def get_value(self, name=None):
-        """
-        Consolidated method to return attribute value
-        """
+    @fields.depends('attribute_type', 'value_selection', 'value_datetime',
+        'value_date', 'value_char', 'value_numeric', 'value_float',
+        'value_boolean', 'value_integer')
+    def on_change_with_value(self, name=None):
+        Lang = Pool().get('ir.lang')
+
+        if not self.attribute_type:
+            return
         if self.attribute_type == 'selection':
-            return self.value_selection.name
+            return self.value_selection and self.value_selection.name
         if self.attribute_type == 'datetime':
-            # XXX: Localize to the timezone in context
-            return self.value_datetime.strftime("%Y-%m-%d %H:%M:%S")
+            return (self.value_datetime
+                and datetime_to_company_tz(self.value_datetime))
         if self.attribute_type == 'date':
-            return datetime.combine(self.value_date, time()). \
-                strftime("%Y-%m-%d")
+            if not self.value_date:
+                return
+            return Lang.get().strftime(self.value_date)
         else:
             value = getattr(self, 'value_' + self.attribute_type)
             return '%s' % value if value is not None else ''
