@@ -15,11 +15,6 @@ except ImportError:
     jinja2_loaded = False
 
 
-__all__ = [
-    'ProductAttributeSet', 'ProductAttributeSelectionOption',
-    'ProductAttribute', 'ProductAttributeAttributeSet', 'Template', 'Product',
-    'ProductProductAttribute', 'AttributeSetFieldTemplate']
-
 ATTRIBUTE_TYPES = [
     ('boolean', 'Boolean'),
     ('integer', 'Integer'),
@@ -143,12 +138,12 @@ class ProductAttributeAttributeSet(ModelSQL):
         ondelete='CASCADE', required=True
     )
 
+
 class Template(metaclass=PoolMeta):
     __name__ = 'product.template'
 
-    attribute_set = fields.Many2One(
-        'product.attribute.set', 'Set', ondelete='RESTRICT'
-    )
+    attribute_set = fields.Many2One('product.attribute.set', 'Set',
+        ondelete='RESTRICT')
     attributes = fields.One2Many(
         "product.product.attribute", "template", "Attributes",
         domain=[
@@ -158,13 +153,12 @@ class Template(metaclass=PoolMeta):
         states={
             'readonly': (~Eval('attribute_set')),
         })
-
     use_templates = fields.Function(fields.Boolean('Use Templates'),
         'get_use_templates')
 
     @classmethod
     def __setup__(cls):
-        super(Template, cls).__setup__()
+        super().__setup__()
         cls._buttons.update({
             'update_attributes_values': {
                 'invisible': ~Eval('use_templates'),
@@ -328,81 +322,61 @@ class ProductProductAttribute(ModelSQL, ModelView):
                 ('template', '=', Eval('template')),
                 ()),
             ])
-
     attribute = fields.Many2One(
         "product.attribute", "Attribute", required=True,
         domain=[('sets', '=', Eval('attribute_set'))],
-        ondelete='RESTRICT'
-    )
-
+        ondelete='RESTRICT')
     attribute_type = fields.Function(
         fields.Selection(ATTRIBUTE_TYPES, "Attribute Type"),
-        'get_attribute_type'
-    )
-
+        'on_change_with_attribute_type')
     attribute_set = fields.Function(
         fields.Many2One("product.attribute.set", "Attribute Set"),
-        'on_change_with_attribute_set', searcher='search_attribute_set'
-    )
-
-    value = fields.Function(
-        fields.Char('Attribute Value'),
-        getter='get_value'
-    )
-
+        'on_change_with_attribute_set', searcher='search_attribute_set')
+    value = fields.Function(fields.Char('Attribute Value'),
+        getter='on_change_with_value')
     value_char = fields.Char(
         "Value Char", translate=True, states={
             'required': Eval('attribute_type') == 'char',
             'invisible': ~(Eval('attribute_type') == 'char'),
-        }
-    )
+        })
     value_numeric = fields.Numeric(
         "Value Numeric", states={
             'required': Eval('attribute_type') == 'numeric',
             'invisible': ~(Eval('attribute_type') == 'numeric'),
-        }
-    )
+        })
     value_float = fields.Float(
         "Value Float", states={
             'required': Eval('attribute_type') == 'float',
             'invisible': ~(Eval('attribute_type') == 'float'),
-        }
-    )
-
+        })
     value_selection = fields.Many2One(
         "product.attribute.selection_option", "Value Selection",
         domain=[('attribute', '=', Eval('attribute'))],
         states={
             'required': Eval('attribute_type') == 'selection',
             'invisible': ~(Eval('attribute_type') == 'selection'),
-        },
-        ondelete='RESTRICT'
-    )
+        }, ondelete='RESTRICT')
 
     value_boolean = fields.Boolean(
         "Value Boolean", states={
             'required': Eval('attribute_type') == 'boolean',
             'invisible': ~(Eval('attribute_type') == 'boolean'),
-        }
-    )
+        })
     value_integer = fields.Integer(
         "Value Integer", states={
             'required': Eval('attribute_type') == 'integer',
             'invisible': ~(Eval('attribute_type') == 'integer'),
-        }
-    )
+        })
     value_date = fields.Date(
         "Value Date", states={
             'required': Eval('attribute_type') == 'date',
             'invisible': ~(Eval('attribute_type') == 'date'),
-        }
-    )
+        })
     value_datetime = fields.DateTime(
         "Value Datetime", states={
             'required': Eval('attribute_type') == 'datetime',
             'invisible': ~(Eval('attribute_type') == 'datetime'),
-        }
-    )
+        })
 
     @fields.depends('product', '_parent_product.template', 'attribute_set')
     def on_change_product(self):
