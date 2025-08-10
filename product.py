@@ -304,8 +304,12 @@ class Product(metaclass=PoolMeta):
     def get_product_attribute_set(self, name=None):
         return self.template.attribute_set and self.template.attribute_set.id
 
-    def update_attributes_values(self):
-        return self.template.update_attributes_values()
+    @classmethod
+    @ModelView.button
+    def update_attributes_values(cls, products):
+        Template = Pool().get('product.template')
+        templates = {x.template for x in products}
+        Template.update_attributes_values(templates)
 
     @property
     def product_attribute_used(self):
