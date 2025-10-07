@@ -213,7 +213,7 @@ class Template(metaclass=PoolMeta):
         return False
 
     def _update_attributes_values(self):
-        if (not self.attribute_set and
+        if (not self.attribute_set or
                 not self.attribute_set.use_templates):
             return
 
