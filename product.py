@@ -213,11 +213,12 @@ class Template(metaclass=PoolMeta):
         return False
 
     def _update_attributes_values(self):
+        products_to_save = []
+
         if (not self.attribute_set or
                 not self.attribute_set.use_templates):
-            return
+            return products_to_save
 
-        products_to_save = []
         for product in self.products:
             for field in self.attribute_set.jinja_templates:
                 obj_name, name = field.field_.split(',')
