@@ -407,7 +407,6 @@ class ProductProductAttribute(ModelSQL, ModelView):
 
     value_boolean = fields.Boolean(
         "Value Boolean", states={
-            'required': Eval('attribute_type') == 'boolean',
             'invisible': ~(Eval('attribute_type') == 'boolean'),
         })
     value_integer = fields.Integer(
